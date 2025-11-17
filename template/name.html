@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta name="description" content="Short character description">
+  <link rel="icon" href="favicon.png">
+  <title>Character Name</title>
+
+  <link rel="stylesheet" href="/bootstrap.css">
+  <link rel="stylesheet" href="/template/music/mp3.css">
+</head>
+
+<body id="TOP">
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Warnings</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-secondary fw-semibold">This page contains:</p>
+        <p>Warning, warning, warning, and warning</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="musicPlayer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="music">
+          <div id="screen">
+            <!-- top bar info-->
+            <div id="top-bar">
+              <span id="current-screen">Music</span>
+            </div>
+            <!-- playlist screen -->
+            <div id="playlist" class="screen"></div>
+            <!-- song currently playing screen -->
+            <div id="current-song" class="screen">
+              <p class="info"><span class="icon">󰝚</span> <span id="song">song</span></p>
+              <img id="album" alt="album cover">
+              <p id="now-playing">1/?</p>
+              <hr>
+              <p class="info"><span class="icon"></span> <span id="artist">artist</span></p>
+              <p class="info"><span class="icon"></span> <span id="album-title">album title</span></p>
+              <p class="info"><span class="icon">󰌳</span> <span id="genre">genre</span></p>
+              <p class="info"><span class="icon"></span> <span id="year">year</span></p>
+              <!-- end of current song screen -->
+            </div>
+            <!-- bottom bar -->
+            <div id="bottom-bar">
+              <input type="range" min="1" max="100" value="0" class="track-progress" onchange="seekTo()">
+              <span id="playing-status"></span>
+              <span id="current-time">00:00</span>
+              <div id="current">
+                <span id="current-song-emoji"></span>
+                <span id="current-song-playing">current song playing</span>
+              </div>
+              <span id="battery"></span>
+            </div>
+          </div>
+          <!-- grid controls -->
+          <div id="controls">
+            <button title="playlist screen" id="playlist-btn" onclick="showPlaylist()">menu</button>
+            <button class="up" title="search current song on youtube" onclick="youtubeSearch()"></button>
+            <button title="currently playing song screen" id="current-song-btn" onclick="showCurrentSong()">music</button>
+
+            <button title="previous track" onclick="prevTrack()" id="left"></button>
+            <button onclick="playpauseTrack()" id="play-pause">󰐎</button>
+            <button title="next track" onclick="nextTrack()" class="right"></button>
+
+            <span class="space"></span>
+            <button class="down"></button>
+            <span class="space"></span>
+          </div>
+        </div>
+        <script src="/template/music/mp3.js"></script>
+        <p class="fst-italic mt-2">Music will continue playing as long as you're on this character's page!</p>
+        <button type="button" class="btn btn-secondary border bg-body-tertiary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar bg-body-tertiary sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand h1" href="/index.html">Sanguine's OC Hub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <hr class="w-50">
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/human.html">Human Characters</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/nonhuman.html">Non-Human Characters</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/anthro.html">Anthropomorphic Characters</a>
+          </li>
+          <li class="nav-item">
+            <hr class="w-50">
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container-lg mt-2">
+  <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+    <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Warnings</button>
+    <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#musicPlayer">Music Player</button>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="basics-tab" data-bs-toggle="tab" data-bs-target="#BASICS" type="button" role="tab" aria-controls="BASICS" aria-selected="true">Basics</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="personality-tab" data-bs-toggle="tab" data-bs-target="#PERSONALITY" type="button" role="tab" aria-controls="PERSONALITY" aria-selected="false">Personality</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="story-tab" data-bs-toggle="tab" data-bs-target="#STORY" type="button" role="tab" aria-controls="STORY" aria-selected="false">Story</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="species-tab" data-bs-toggle="tab" data-bs-target="#SPECIES" type="button" role="tab" aria-controls="SPECIES" aria-selected="false">Species</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#APPEARANCE" type="button" role="tab" aria-controls="APPEARANCE" aria-selected="false">Appearance</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="relationships-tab" data-bs-toggle="tab" data-bs-target="#RELATIONSHIPS" type="button" role="tab" aria-controls="RELATIONSHIPS" aria-selected="false">Relationships</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="health-tab" data-bs-toggle="tab" data-bs-target="#HEALTH" type="button" role="tab" aria-controls="HEALTH" aria-selected="false">Health</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="combat-tab" data-bs-toggle="tab" data-bs-target="#COMBAT" type="button" role="tab" aria-controls="COMBAT" aria-selected="false">Combat</button>
+    </li>
+  </ul>
+
+  <div class="row g-2">
+    <div class="col-lg-3 mt-3">
+      <div style="position:sticky;top:4rem;">
+        <div class="card align-items-center p-1">
+          <img src="https://placehold.co/500.png" class="w-100">
+        </div>
+        <hr>
+        <div class="card p-1">
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Name</span>
+            <span class="fst-italic">Content</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Pronouns</span>
+            <span class="fst-italic">Con/tent</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Species</span>
+            <span class="fst-italic">Content</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Age</span>
+            <span class="fst-italic">00</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">DOB</span>
+            <span class="fst-italic">Date Date, Year</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Gender</span>
+            <span class="fst-italic">Content</span>
+          </div>
+
+          <div class="d-flex justify-content-between p-1">
+            <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Orientation</span>
+            <span class="fst-italic">Content</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content col-lg-9 mt-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="BASICS" role="tabpanel" aria-labelledby="basics-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="text-center">Basics</h1>
+          </div>
+          <div class="col-md-7">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Introduction</h3>
+          <hr class="w-50">
+          <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+        </div>
+        <div class="card mb-2">
+          <div class="row g-2">
+            <div class="col-lg-6">
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Name</h5>
+                <p class="mb-0 text-center">Name — First name; means lorem ipsum.</p>
+                <p class="mb-0 text-center">Name — Surname; means lorem ipsum.</p>
+              </div>
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Gender</h5>
+                <p class="mb-0 text-center">Gender — Brief explanation</p>
+              </div>
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Orientation</h5>
+                <p class="mb-0 text-center">Orientation — Brief explanation.</p>
+              </div>
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Species</h5>
+                <p class="mb-0 text-center">Species — Brief explanation.</p>
+              </div>
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Race / Ethnicity / Nationality</h5>
+                <p class="mb-0 text-center">Race / Ethnicity / Nationality</p>
+              </div>
+              <div class="p-2 ms-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Languages Spoken</h5>
+                <p class="mb-0 text-center">Languages — Brief explanation.</p>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Birthplace</h5>
+                <p class="mb-0 text-center">Birthplace — Brief explanation.</p>
+              </div>
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Residence</h5>
+                <p class="mb-0 text-center">Residence — Brief explanation.</p>
+              </div>
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Occupation</h5>
+                <p class="mb-0 text-center">Occupation — Brief explanation.</p>
+              </div>
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Educational Background</h5>
+                <p class="mb-0 text-center">Educational Background — Brief explanation.</p>
+              </div>
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Religious Beliefs</h5>
+                <p class="mb-0 text-center">Religious Beliefs — Brief explanation.</p>
+              </div>
+              <div class="p-2 me-2 my-2 bg-body-tertiary bg-opacity-50">
+                <h5 class="text-center text-secondary">Social Class</h5>
+                <p class="mb-0 text-center">Class — Brief explanation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-7">
+            <div class="card p-2 mb-2">
+              <h3>Trivia</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Dominant hand</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Blood type</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Associated tarot card</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Trivia fact</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Trivia fact</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="card p-2 mb-2">
+              <h3>Meta</h3>
+              <hr class="w-50">
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Updated</span>
+              <span class="fst-italic" style="text-indent:1rem;">Date Date, 2025</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Setting</span>
+              <span class="fst-italic" style="text-indent:1rem;">Verse name</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Status</span>
+              <span class="fst-italic" style="text-indent:1rem;">Alive/Dead</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Pairings</span>
+              <span class="fst-italic" style="text-indent:1rem;">Pairings</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Story Role</span>
+              <span class="fst-italic" style="text-indent:1rem;">Story Role</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="PERSONALITY" role="tabpanel" aria-labelledby="personality-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-6">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h1 class="text-center">Personality</h1>
+          </div>
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Overview</h3>
+          <hr class="w-50">
+          <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Traits</h3>
+              <hr class="w-50">
+              <div class="row g-2">
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Motivations</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Motivation description.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Motivation description.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Motivation description.</li>
+              </ul>
+            </div>
+            <div class="card p-2 mb-2">
+              <h3>Fears</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Fear description.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Fear description.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Fear description.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-8">
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <div class="card p-2 mb-2">
+                  <h3>Likes</h3>
+                  <hr class="w-50">
+                  <ul class="list-unstyled">
+                    <li><span class="text-secondary ms-1 me-2">+</span>Item</li>
+                    <li><span class="text-secondary ms-1 me-2">+</span>Item.</li>
+                    <li><span class="text-secondary ms-1 me-2">+</span>Item.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card p-2 mb-2">
+                <h3>Dislikes</h3>
+                  <hr class="w-50">
+                  <ul class="list-unstyled">
+                    <li><span class="text-secondary ms-1 me-2">–</span>Item</li>
+                    <li><span class="text-secondary ms-1 me-2">–</span>Item.</li>
+                    <li><span class="text-secondary ms-1 me-2">–</span>Item.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-sm-6">
+                <div class="card p-2 mb-2">
+                  <h3>Hobbies</h3>
+                  <hr class="w-50">
+                  <ul class="list-unstyled">
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item</li>
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card p-2 mb-2">
+                  <h3>Habits</h3>
+                  <hr class="w-50">
+                  <ul class="list-unstyled">
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item</li>
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                    <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-2 mb-2">
+              <h3>Extra</h3>
+              <hr class="w-50">
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Primary Vice</span>
+              <span class="fst-italic" style="text-indent:1rem;">Brief explanation.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Primary Virtue</span>
+              <span class="fst-italic" style="text-indent:1rem;">Brief explanation.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Temperament</span>
+              <span class="fst-italic" style="text-indent:1rem;">Brief explanation.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Alignment</span>
+              <span class="fst-italic" style="text-indent:1rem;">Brief explanation.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="STORY" role="tabpanel" aria-labelledby="story-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="text-center">Story</h1>
+          </div>
+          <div class="col-md-7">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="card p-2" style="position:sticky;top:4rem;">
+              <h3>Key Points</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card p-2">
+              <h3>Act I</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="card p-2" style="position:sticky;top:4rem;">
+              <h3>Key Points</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card p-2">
+              <h3>Act II</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-2">
+          <div class="col-md-4">
+            <div class="card p-2" style="position:sticky;top:4rem;">
+              <h3>Key Points</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Item.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card p-2">
+              <h3>Act III</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="SPECIES" role="tabpanel" aria-labelledby="species-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-7">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="text-center">Species</h1>
+          </div>
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Species Name</h3>
+          <hr class="w-50">
+          Brief overview. Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-7">
+            <div class="card p-2 mb-2">
+              <h3>Traits</h3>
+              <hr class="w-50">
+              <div class="row g-2">
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Trait</h5>
+                    <p class="mb-0 text-center">Brief explanation.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="card p-2 mb-2">
+              <h3>Abilities</h3>
+              <hr class="w-50">
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Ability</span>
+              <span class="fst-italic" style="text-indent:1rem;">Ability description.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Ability</span>
+              <span class="fst-italic" style="text-indent:1rem;">Ability description.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Ability</span>
+              <span class="fst-italic" style="text-indent:1rem;">Ability description.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Ability</span>
+              <span class="fst-italic" style="text-indent:1rem;">Ability description.</span>
+              <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Ability</span>
+              <span class="fst-italic" style="text-indent:1rem;">Ability description.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="APPEARANCE" role="tabpanel" aria-labelledby="appearance-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h1 class="text-center">Appearance</h1>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-10">
+            <div class="card p-2 mb-2">
+              <div class="row g-2">
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 mt-0 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Height</h5>
+                    <p class="mb-0 text-center">Height.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Build</h5>
+                    <p class="mb-0 text-center">Build.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Skin</h5>
+                    <p class="mb-0 text-center">Skin.</p>
+                  </div>
+                  <div class="p-2 my-2 mb-0 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Scars</h5>
+                    <p class="mb-0 text-center">Scars.</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-2 my-2 mt-0 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Face Shape</h5>
+                    <p class="mb-0 text-center">Face shape.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Hair</h5>
+                    <p class="mb-0 text-center">Hair.</p>
+                  </div>
+                  <div class="p-2 my-2 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Eyes</h5>
+                    <p class="mb-0 text-center">Eyes.</p>
+                  </div>
+                  <div class="p-2 my-2 mb-0 bg-body-tertiary bg-opacity-50">
+                    <h5 class="text-center text-secondary">Tattoos</h5>
+                    <p class="mb-0 text-center">Tattoos.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-lg-5">
+                <div class="card p-2 mb-2">
+                  <h3>Style</h3>
+                  <hr class="w-50">
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem optio sint eveniet eaque perferendis voluptatum dolorum eos, tempora aspernatur voluptatibus, architecto possimus vitae! Officiis, dignissimos nam maiores consequuntur incidunt unde?</p>
+                </div>
+                <div class="card p-2 mb-2">
+                  <h3>Accessories</h3>
+                  <hr class="w-50">
+                  <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Accessory</span>
+                  <span class="fst-italic" style="text-indent:1rem;">Description.</span>
+                  <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Accessory</span>
+                  <span class="fst-italic" style="text-indent:1rem;">Description.</span>
+                  <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Accessory</span>
+                  <span class="fst-italic" style="text-indent:1rem;">Description.</span>
+                  <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Accessory</span>
+                  <span class="fst-italic" style="text-indent:1rem;">Description.</span>
+                  <span class="fw-semibold text-uppercase font-sans-serif text-secondary">Accessory</span>
+                  <span class="fst-italic" style="text-indent:1rem;">Description.</span>
+                </div>
+              </div>
+              <div class="col-lg-7">
+                <div class="card p-2 mb-2" style="position:sticky;top:4rem;">
+                  <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="/stars.jpg" class="d-block w-100" alt="...">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="/stars.jpg" class="d-block w-100" alt="...">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="/stars.jpg" class="d-block w-100" alt="...">
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 mb-2">
+              <h3>Extra Notes</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Lorem ipsum.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Lorem ipsum.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Lorem ipsum.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Lorem ipsum.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Lorem ipsum.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div style="position:sticky;top:4rem;">
+              <div class="card p-2">
+                <div class="card border-0 mb-1" style="background-color: #ffffff;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#ffffff</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #dddddd;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#dddddd</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #bbbbbb;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#bbbbbb</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #999999;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#999999</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #777777;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#777777</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #555555;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#555555</div>
+                </div>
+                <div class="card border-0 my-1" style="background-color: #333333;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#333333</div>
+                </div>
+                <div class="card border-0 mt-1" style="background-color: #111111;height:3rem;">
+                  <div class="badge rounded-pill my-auto mx-auto bg-black bg-opacity-75 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Features">#111111</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="RELATIONSHIPS" role="tabpanel" aria-labelledby="relationships-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-6">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h1 class="text-center">Relationships</h1>
+          </div>
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Sociability</h3>
+          <hr class="w-50">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?
+        </div>
+        <div class="row g-2">
+          <div class="col-sm-8">
+            <div class="card p-2 mb-2">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affinity</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Trust</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Respect</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affection</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">Relationship Description</p>
+              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni alias, aspernatur expedita non, reiciendis quam provident odit vel quasi commodi placeat quo! Sit sed iusto placeat deleniti quia, explicabo odio.</p>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Character feels about Relation</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</spapn>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Relation feels about Character</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div style="position:sticky;top:4rem;" class="mb-2">
+              <div class="card p-2 mb-2">
+                <div class="row g-2">
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="card align-items-center p-1">
+                    <img src="https://placehold.co/500.png" class="w-100">
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-2 mb-2 align-items-center">
+              <h4 class="text-secondary text-uppercase">Name</h4>
+              <hr class="w-50">
+              <p class="mb-0">Relationship</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-sm-4">
+            <div style="position:sticky;top:4rem;" class="mb-2">
+              <div class="card p-2 mb-2">
+                <div class="row g-2">
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="card align-items-center p-1">
+                    <img src="https://placehold.co/500.png" class="w-100">
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-2 mb-2 align-items-center">
+              <h4 class="text-secondary text-uppercase">Name</h4>
+              <hr class="w-50">
+              <p class="mb-0">Relationship</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="card p-2 mb-2">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affinity</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Trust</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Respect</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affection</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">Relationship Description</p>
+              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni alias, aspernatur expedita non, reiciendis quam provident odit vel quasi commodi placeat quo! Sit sed iusto placeat deleniti quia, explicabo odio.</p>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Character feels about Relation</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</spapn>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Relation feels about Character</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</p>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-sm-8">
+            <div class="card p-2 mb-2">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affinity</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Trust</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Respect</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Affection</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">Relationship Description</p>
+              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni alias, aspernatur expedita non, reiciendis quam provident odit vel quasi commodi placeat quo! Sit sed iusto placeat deleniti quia, explicabo odio.</p>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Character feels about Relation</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</spapn>
+              <p class="fw-semibold text-uppercase font-sans-serif text-secondary mb-0">How Relation feels about Character</p>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio eos neque, ad similique vitae, totam ipsam dolorem, sunt molestiae id quo officiis velit. Aut quam debitis illo! Ipsam, eveniet quisquam?</p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div style="position:sticky;top:4rem;" class="mb-2">
+              <div class="card p-2 mb-2">
+                <div class="row g-2">
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="card align-items-center p-1">
+                    <img src="https://placehold.co/500.png" class="w-100">
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <div class="card p-2 h-100">
+                      <div class="align-items-center p-1 h-100" style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right; background-attachment:fixed;background-size:20rem;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card p-2 mb-2 align-items-center">
+              <h4 class="text-secondary text-uppercase">Name</h4>
+              <hr class="w-50">
+              <p class="mb-0">Relationship</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="HEALTH" role="tabpanel" aria-labelledby="relationships-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="text-center">Health</h1>
+          </div>
+          <div class="col-md-7">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Overview</h3>
+          <hr class="w-50">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Physical Health</h3>
+              <hr class="w-50">
+              <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Mental Health</h3>
+              <hr class="w-50">
+              <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Substance Use</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Eating Habits</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Sleeping Habits</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card p-2 mb-2">
+              <h3>Hygiene Habits</h3>
+              <hr class="w-50">
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Medical History</h3>
+          <hr class="w-50">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?</p>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="COMBAT" role="tabpanel" aria-labelledby="combat-tab" tabindex="0">
+        <div class="row g-1 mb-2 align-items-center">
+          <div class="col-md-7">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:left; background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <h1 class="text-center">Combat</h1>
+          </div>
+          <div class="col-md-2">
+            <div class="card p-2">
+              <div style="background-image:url(https://i.pinimg.com/736x/a9/fc/8a/a9fc8a8764532011a623213a43086965.jpg);background-position:right;background-attachment:fixed;background-size:20rem;height:3rem;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card p-2 mb-2">
+          <h3>Overview</h3>
+          <hr class="w-50">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, eos consequatur! Reiciendis ipsum odit minus blanditiis eius perferendis incidunt voluptatibus delectus illum facilis iusto, ducimus rerum, veritatis impedit, pariatur porro?
+        </div>
+        <div class="row g-2">
+          <div class="col-lg-8">
+            <div class="card p-2 mb-2">
+              <h3>Stats</h3>
+              <hr class="w-50">
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Strength</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Constitution</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Speed</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Dexterity</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Intelligence</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                  <span class="text-uppercase text-secondary font-sans-serif fw-semibold">Range</span>
+                  <div class="progress my-1" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 50%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <div class="card p-2 mb-2">
+                  <h3>Attack</h3>
+                  <hr class="w-50">
+                  <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa in tempore laudantium excepturi itaque praesentium minima optio cupiditate nam. Saepe facere ipsa exercitationem deleniti recusandae illum inventore at aspernatur veritatis?</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card p-2 mb-2">
+                  <h3>Defense</h3>
+                  <hr class="w-50">
+                  <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa in tempore laudantium excepturi itaque praesentium minima optio cupiditate nam. Saepe facere ipsa exercitationem deleniti recusandae illum inventore at aspernatur veritatis?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card p-2 mb-2">
+              <h3>Strengths</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Strength.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Strength.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Strength.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Strength.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Strength.</li>
+              </ul>
+            </div>
+            <div class="card p-2 mb-2">
+              <h3>Weaknesses</h3>
+              <hr class="w-50">
+              <ul class="list-unstyled">
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Weakness.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Weakness.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Weakness.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Weakness.</li>
+                <li><span class="text-secondary ms-1 me-2">&#11049;</span>Weakness.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<a class="btn btn-secondary border position-fixed bottom-0 end-0" type="button" href="#TOP">^</a>
+<script src="/bootstrap.bundle.js"></script>
+<script>const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))</script>
+</body>
+</html>
